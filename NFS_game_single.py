@@ -13,32 +13,54 @@ font = pygame.font.SysFont(None, 60)
 
 
 def win_blit(car, color, times, time_counter, current_time):
+    '''
+    drawing background, current time, checkpoints, lap time and car object
+    return: number of current checkpoint
+    '''
+
+    # blitting background
     WIN.blit(BACKGROUND, (0, 0))
 
+    # blitting Time: current time
     WIN.blit(font.render('Time: ', True, WHITE), (1510, 10))
-    for i in range(1, 7):
-        WIN.blit(font.render(f'Check{i}: ', True, WHITE), (1510, 10 + i * 60))
-    WIN.blit(font.render('Lap time: ', True, WHITE), (1510, 430))
-
     WIN.blit(font.render(current_time, True, WHITE), (1740, 10))
 
+    # blitting Check_num:
+    for i in range(1, 7):
+        WIN.blit(font.render(f'Check{i}: ', True, WHITE), (1510, 10 + i * 60))
+
+    # blitting Lap time:
+    WIN.blit(font.render('Lap time: ', True, WHITE), (1510, 430))
+
+    # filling times list with checkpoint times
     if car.get_checkpoint(time_counter):
         times[time_counter] = time_conventor(car.get_checkpoint(time_counter))
         time_counter += 1
 
+    # blitting checkpoint times with color of car
     for i in range(time_counter):
         WIN.blit(font.render(times[i], True, color), (1740, 70 + i * 60))
 
+    # blitting car object
     car.draw()
+
+    # updating screen
     pygame.display.update()
 
     return time_counter
 
 
 def main():
+    '''
+    main game loop of "GAME ALONE"
+    '''
+
+    # initializing car object and color
     random_car = randint(0, 7)
     formula = Car(955, 900, CARS[random_car][0])
     color = CARS[random_car][1]
+
+    # initializing checkpoints
     times = [None for _ in range(7)]
     time_counter = 0
 
@@ -46,14 +68,17 @@ def main():
     pygame.display.update()
     sleep(1)
 
+    # main loop
     run = True
     while run:
         clock.tick(FPS)
 
+        # quit
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
 
+        # getting pressed keys
         keys_pressed = pygame.key.get_pressed()
         w = keys_pressed[pygame.K_w]
         a = keys_pressed[pygame.K_a]
